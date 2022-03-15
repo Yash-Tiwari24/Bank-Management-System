@@ -1,7 +1,9 @@
+using Bank_Management_System.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,9 +18,10 @@ namespace Bank_Management_System
 {
     public class Startup
     {
+        public readonly IConfiguration _configuration;
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -26,7 +29,7 @@ namespace Bank_Management_System
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDbContext<BankDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("Bank_System")));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
